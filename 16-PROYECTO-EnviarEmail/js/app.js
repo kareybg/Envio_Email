@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Seleccionar los elementos de la interfaz
     const inputEmail = document.querySelector('#email');
+    const inputcC = document.querySelector('#cC');
     const inputAsunto = document.querySelector('#asunto');
     const inputMensaje = document.querySelector('#mensaje');
     const formulario = document.querySelector('#formulario');
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Asignar eventos
     inputEmail.addEventListener('input', validar);
+    inputcC.addEventListener('input', validar);
     inputAsunto.addEventListener('input', validar);
     inputMensaje.addEventListener('input', validar);
 
@@ -26,6 +28,18 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         resetFormulario();
     })
+
+    inputcC.addEventListener('blur', function(e){
+        if (e.target.value.trim() === ''){
+            limpiarAlerta(e.target.parentElement);
+            e.target.value = '';
+            delete email.cC;
+            comprobarEmail();
+        }else{
+            email.cC = e.target.value;
+            validar(e);
+        }
+    });
 
     function enviarEmail(e) {
         e.preventDefault();
@@ -53,14 +67,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function validar(e) {
-        if(e.target.value.trim() === '') {
+        if(e.target.value.trim() === '' && e.target.id !== 'cC') {
             mostrarAlerta(`El Campo ${e.target.id} es obligatorio`, e.target.parentElement);
             email[e.target.name] = '';
             comprobarEmail();
             return;
         }
 
-        if(e.target.id === 'email' && !validarEmail(e.target.value)) {
+        if((e.target.id === 'email' || e.target.id === 'cC') && !validarEmail(e.target.value)) {
             mostrarAlerta('El email no es válido', e.target.parentElement);
             email[e.target.name] = '';
             comprobarEmail();
@@ -118,7 +132,18 @@ document.addEventListener('DOMContentLoaded', function() {
         email.asunto = '';
         email.mensaje = '';
 
+        //Limpiar todas las alertas
+        limpiarAlerta(inputEmail.parentElement);
+        limpiarAlerta(inputcC.parentElement);
+        limpiarAlerta(inputAsunto.parentElement);
+        limpiarAlerta(inputMensaje.parentElement);
+
         formulario.reset();
         comprobarEmail();
+
+        //Borrar el contenido de cC si es que existe
+        if(Object.keys(email.cC) == ''){
+            delete email.cC;
+        }
     }
 });

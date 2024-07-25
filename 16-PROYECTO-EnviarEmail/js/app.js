@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resetFormulario();
     })
 
+    //Evento cuando salimos del input cC
     inputcC.addEventListener('blur', function(e){
         if (e.target.value.trim() === ''){
             limpiarAlerta(e.target.parentElement);
@@ -131,6 +132,9 @@ document.addEventListener('DOMContentLoaded', function() {
         email.email = '';
         email.asunto = '';
         email.mensaje = '';
+        
+        //Borrar el campo cC
+        delete email.cC;
 
         //Limpiar todas las alertas
         limpiarAlerta(inputEmail.parentElement);
@@ -140,10 +144,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
         formulario.reset();
         comprobarEmail();
-
-        //Borrar el contenido de cC si es que existe
-        if(Object.keys(email.cC) == ''){
-            delete email.cC;
-        }
     }
 });
